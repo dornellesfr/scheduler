@@ -1,7 +1,7 @@
 import "../global.css";
 
-import { Slot } from "expo-router";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { Slot } from "expo-router";
 
 import { queryClient } from "../lib/query-client";
 
