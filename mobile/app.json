@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "scheme": "scheduler",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "output": "static"
+    },
+    "plugins": ["expo-router", "expo-status-bar"],
+    "name": "Scheduler",
+    "slug": "scheduler",
+    "android": {
+      "package": "com.scheduler.mobile"
+    }
+  }
+}
