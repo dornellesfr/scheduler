@@ -11,4 +11,4 @@ WORKDIR /var/www/html
 
 EXPOSE 8000
 
-CMD ["php", "-S", "0.0.0.0:8000", "-t", "."]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
