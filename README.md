@@ -21,6 +21,11 @@ A API ficará disponível em `http://localhost:8000`.
 
 Na inicialização, o backend instala as dependências, executa migrations e seeds.
 
+## Insomnia
+
+As requisições da API podem ser importadas no Insomnia pelo arquivo
+[`insomnia/scheduler.json`](insomnia/scheduler.json).
+
 Para parar os containers:
 
 ```sh
