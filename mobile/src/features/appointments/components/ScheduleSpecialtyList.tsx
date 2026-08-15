@@ -24,9 +24,6 @@ export function ScheduleSpecialtyList({
 }: ScheduleSpecialtyListProps): React.JSX.Element {
   return (
     <View className="flex-1 bg-slate-50 px-6 pt-6 dark:bg-slate-950">
-      <Text className="mb-5 text-2xl font-semibold text-slate-950 dark:text-slate-50">
-        Especialidade
-      </Text>
       {isPending && !data ? (
         <ScheduleLoadingState message="Carregando especialidades..." />
       ) : null}

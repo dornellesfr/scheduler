@@ -2,10 +2,9 @@ import { FlashList } from "@shopify/flash-list";
 import { useState } from "react";
 import { View } from "react-native";
 
-import { Text } from "../../components/ui/Text";
-import { CancelAppointmentDialog } from "../../features/appointments/components/CancelAppointmentDialog";
 import { AppointmentCard } from "../../features/appointments/components/AppointmentCard";
 import { AppointmentDetailsDialog } from "../../features/appointments/components/AppointmentDetailsDialog";
+import { CancelAppointmentDialog } from "../../features/appointments/components/CancelAppointmentDialog";
 import { FilterChips } from "../../features/appointments/components/FilterChips";
 import { HistoryEmptyState } from "../../features/appointments/components/HistoryEmptyState";
 import { HistoryErrorState } from "../../features/appointments/components/HistoryErrorState";
@@ -52,10 +51,7 @@ export default function HistoryScreen(): React.JSX.Element {
   const hasData: boolean = data !== undefined;
 
   return (
-    <View className="flex-1 bg-slate-50 px-6 pt-6 dark:bg-slate-950">
-      <Text className="mb-5 text-2xl font-semibold text-slate-950 dark:text-slate-50">
-        Histórico de consultas
-      </Text>
+    <View className="flex-1 bg-slate-50 dark:bg-slate-950 px-6 pt-6">
       <FilterChips
         selectedStatus={selectedStatus}
         onSelect={setSelectedStatus}

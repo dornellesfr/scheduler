@@ -73,10 +73,23 @@ jest.mock("@react-native-community/datetimepicker", () => {
   return { __esModule: true, default: DateTimePicker };
 });
 
-jest.mock("expo-router", () => ({
-  useFocusEffect: jest.fn(),
-  useRouter: () => ({ replace: mockReplace }),
-}));
+jest.mock("expo-router", () => {
+  const React = jest.requireActual<typeof import("react")>("react");
+  const { Text } =
+    jest.requireActual<typeof import("react-native")>("react-native");
+
+  return {
+    Tabs: {
+      Screen: ({
+        options,
+      }: {
+        options: { title: string };
+      }): React.JSX.Element => React.createElement(Text, null, options.title),
+    },
+    useFocusEffect: jest.fn(),
+    useRouter: () => ({ replace: mockReplace }),
+  };
+});
 
 jest.mock("../src/features/appointments/api/appointments.api", () => ({
   appointmentsApi: {
@@ -211,7 +224,7 @@ describe("Schedule screen", () => {
     fireEvent.press(screen.getByLabelText("Voltar"));
     expect(await screen.findByText("Passo 1 de 3 · Profissional")).toBeTruthy();
     fireEvent.press(screen.getByLabelText("Voltar"));
-    expect(await screen.findByText("Especialidade")).toBeTruthy();
+    expect(await screen.findByText("Especialidades")).toBeTruthy();
   });
 
   it("renders loading, errors, retry and specialties", async () => {

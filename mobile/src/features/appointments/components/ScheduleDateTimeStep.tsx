@@ -53,9 +53,6 @@ export function ScheduleDateTimeStep({
         >
           Voltar
         </Button>
-        <Text className="flex-1 text-xl font-semibold text-slate-950 dark:text-slate-50">
-          Passo 2 de 3 · Data e horário
-        </Text>
       </View>
       <Button
         className="mb-3 self-start"

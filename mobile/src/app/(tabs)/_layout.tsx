@@ -14,6 +14,7 @@ export default function TabsLayout(): React.JSX.Element {
       <Tabs.Screen
         name="history"
         options={{
+          headerShown: true,
           tabBarLabel: "Histórico",
           title: "Histórico de consultas",
           tabBarIcon: ({ color, size }) => (
@@ -24,8 +25,9 @@ export default function TabsLayout(): React.JSX.Element {
       <Tabs.Screen
         name="schedule"
         options={{
+          headerShown: true,
           tabBarLabel: "Agendar",
-          title: "Agendar nova consulta",
+          title: "Especialidades",
           tabBarIcon: ({ color, size }) => (
             <CalendarPlus color={color} size={size} />
           ),

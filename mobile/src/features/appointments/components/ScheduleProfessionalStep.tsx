@@ -41,9 +41,6 @@ export function ScheduleProfessionalStep({
         >
           Voltar
         </Button>
-        <Text className="flex-1 text-xl font-semibold text-slate-950 dark:text-slate-50">
-          Passo 1 de 3 · Profissional
-        </Text>
       </View>
       <Text className="mb-5 text-sm text-slate-600 dark:text-slate-400">
         {specialty.name}

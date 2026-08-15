@@ -1,20 +1,20 @@
 import { api } from "../../../lib/api";
-import {
-  appointmentResponseSchema,
-  createAppointmentPayloadSchema,
-  professionalCollectionResponseSchema,
-  specialtyCollectionResponseSchema,
-  type CreateAppointmentPayload,
-  type CreatedAppointment,
-  type ScheduleProfessional,
-  type ScheduleSpecialty,
-} from "../schemas/scheduleAppointment";
 import type {
   Appointment,
   AppointmentCollectionResponse,
   AppointmentListParams,
   AppointmentResponse,
 } from "../interfaces/Appointment";
+import {
+  appointmentResponseSchema,
+  type CreateAppointmentPayload,
+  createAppointmentPayloadSchema,
+  type CreatedAppointment,
+  professionalCollectionResponseSchema,
+  type ScheduleProfessional,
+  type ScheduleSpecialty,
+  specialtyCollectionResponseSchema,
+} from "../schemas/scheduleAppointment";
 
 const DEMO_PATIENT_ID: string = "00000000-0000-4000-8000-000000000001";
 

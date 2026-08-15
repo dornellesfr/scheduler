@@ -1,5 +1,6 @@
 import "../global.css";
 
+import { PortalHost } from "@rn-primitives/portal";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Slot } from "expo-router";
 
@@ -9,6 +10,7 @@ export default function Layout(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <Slot />
+      <PortalHost />
     </QueryClientProvider>
   );
 }

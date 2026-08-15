@@ -1,4 +1,4 @@
-import { useFocusEffect, useRouter } from "expo-router";
+import { Tabs, useFocusEffect, useRouter } from "expo-router";
 import { startOfDay } from "date-fns";
 import { useCallback, useState } from "react";
 import { BackHandler, View } from "react-native";
@@ -34,6 +34,14 @@ type ScheduleView =
   | "wizard_review"
   | "success";
 
+const SCHEDULE_TITLES: Record<ScheduleView, string> = {
+  specialty_list: "Especialidades",
+  wizard_professional: "Passo 1 de 3 · Profissional",
+  wizard_datetime: "Passo 2 de 3 · Data e horário",
+  wizard_review: "Passo 3 de 3 · Revisão",
+  success: "Agendamento concluído",
+};
+
 export default function ScheduleScreen(): React.JSX.Element {
   const router = useRouter();
   const [screen, setScreen] = useState<ScheduleView>("specialty_list");
@@ -43,6 +51,7 @@ export default function ScheduleScreen(): React.JSX.Element {
   const specialties = useSpecialties();
   const professionals = useProfessionals(draft?.specialty.id ?? null);
   const createAppointment = useCreateAppointment();
+  const scheduleTitle: string = SCHEDULE_TITLES[screen];
 
   function resetSchedule(): void {
     createAppointment.reset();
@@ -147,48 +156,63 @@ export default function ScheduleScreen(): React.JSX.Element {
 
   if (screen === "specialty_list") {
     return (
-      <ScheduleSpecialtyList
-        data={specialties.data}
-        isError={specialties.isError}
-        isPending={specialties.isPending}
-        onRetry={() => specialties.refetch()}
-        onSelect={handleSpecialtySelect}
-      />
+      <>
+        <Tabs.Screen options={{ title: scheduleTitle }} />
+        <ScheduleSpecialtyList
+          data={specialties.data}
+          isError={specialties.isError}
+          isPending={specialties.isPending}
+          onRetry={() => specialties.refetch()}
+          onSelect={handleSpecialtySelect}
+        />
+      </>
     );
   }
 
   if (!draft) {
-    return <View className="flex-1 bg-slate-50 dark:bg-slate-950" />;
+    return (
+      <>
+        <Tabs.Screen options={{ title: scheduleTitle }} />
+        <View className="flex-1 bg-slate-50 dark:bg-slate-950" />
+      </>
+    );
   }
 
   if (screen === "wizard_professional") {
     return (
-      <ScheduleProfessionalStep
-        data={professionals.data}
-        isError={professionals.isError}
-        isPending={professionals.isPending}
-        onBack={handleBack}
-        onRetry={() => professionals.refetch()}
-        onSelect={handleProfessionalSelect}
-        specialty={draft.specialty}
-      />
+      <>
+        <Tabs.Screen options={{ title: scheduleTitle }} />
+        <ScheduleProfessionalStep
+          data={professionals.data}
+          isError={professionals.isError}
+          isPending={professionals.isPending}
+          onBack={handleBack}
+          onRetry={() => professionals.refetch()}
+          onSelect={handleProfessionalSelect}
+          specialty={draft.specialty}
+        />
+      </>
     );
   }
 
   if (screen === "wizard_datetime") {
     return (
-      <ScheduleDateTimeStep
-        onBack={handleBack}
-        onDateChange={handleDateChange}
-        onSelectTime={handleTimeSelect}
-        selectedDate={draft.date}
-      />
+      <>
+        <Tabs.Screen options={{ title: scheduleTitle }} />
+        <ScheduleDateTimeStep
+          onBack={handleBack}
+          onDateChange={handleDateChange}
+          onSelectTime={handleTimeSelect}
+          selectedDate={draft.date}
+        />
+      </>
     );
   }
 
   if (screen === "wizard_review" && draft.professional && draft.time) {
     return (
       <>
+        <Tabs.Screen options={{ title: scheduleTitle }} />
         <ScheduleReviewStep
           date={draft.date}
           isPending={createAppointment.isPending}
@@ -224,16 +248,24 @@ export default function ScheduleScreen(): React.JSX.Element {
 
   if (screen === "success" && draft.professional && draft.time) {
     return (
-      <ScheduleSuccess
-        date={draft.date}
-        onScheduleAnother={resetSchedule}
-        onViewHistory={handleViewHistory}
-        professional={draft.professional}
-        specialty={draft.specialty}
-        time={draft.time}
-      />
+      <>
+        <Tabs.Screen options={{ title: scheduleTitle }} />
+        <ScheduleSuccess
+          date={draft.date}
+          onScheduleAnother={resetSchedule}
+          onViewHistory={handleViewHistory}
+          professional={draft.professional}
+          specialty={draft.specialty}
+          time={draft.time}
+        />
+      </>
     );
   }
 
-  return <View className="flex-1 bg-slate-50 dark:bg-slate-950" />;
+  return (
+    <>
+      <Tabs.Screen options={{ title: scheduleTitle }} />
+      <View className="flex-1 bg-slate-50 dark:bg-slate-950" />
+    </>
+  );
 }

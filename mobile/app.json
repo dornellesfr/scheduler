@@ -20,7 +20,8 @@
     "name": "Scheduler",
     "slug": "scheduler",
     "android": {
-      "package": "com.scheduler.mobile"
+      "package": "com.scheduler.mobile",
+      "usesCleartextTraffic": true
     }
   }
 }

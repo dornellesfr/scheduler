@@ -1,3 +1,4 @@
+import { PortalHost } from "@rn-primitives/portal";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   cleanup,
@@ -10,6 +11,122 @@ import type { ReactElement } from "react";
 import HistoryScreen from "../src/app/(tabs)/history";
 import { appointmentsApi } from "../src/features/appointments/api/appointments.api";
 import type { Appointment } from "../src/features/appointments/interfaces/Appointment";
+
+jest.mock("@rn-primitives/select", () => {
+  const React = jest.requireActual<typeof import("react")>("react");
+  const { Pressable, Text, View } =
+    jest.requireActual<typeof import("react-native")>("react-native");
+
+  interface MockOption {
+    label: string;
+    value: string;
+  }
+
+  interface MockSelectContextValue {
+    onValueChange: (option: MockOption | undefined) => void;
+    value: MockOption;
+  }
+
+  interface MockRootProps {
+    children: React.ReactNode;
+    onValueChange: (option: MockOption | undefined) => void;
+    value: MockOption;
+  }
+
+  interface MockItemProps {
+    label: string;
+    value: string;
+  }
+
+  interface MockChildrenProps {
+    children?: React.ReactNode;
+  }
+
+  interface MockTriggerProps extends MockChildrenProps {
+    accessibilityLabel?: string;
+  }
+
+  const SelectContext = React.createContext<MockSelectContextValue | null>(
+    null,
+  );
+
+  function MockRoot({
+    children,
+    onValueChange,
+    value,
+  }: MockRootProps): React.JSX.Element {
+    return (
+      <SelectContext.Provider value={{ onValueChange, value }}>
+        <View>{children}</View>
+      </SelectContext.Provider>
+    );
+  }
+
+  function MockTrigger({
+    accessibilityLabel,
+    children,
+  }: MockTriggerProps): React.JSX.Element {
+    return (
+      <Pressable accessibilityLabel={accessibilityLabel}>{children}</Pressable>
+    );
+  }
+
+  function MockValue({
+    placeholder,
+  }: {
+    placeholder: string;
+  }): React.JSX.Element {
+    const context: MockSelectContextValue = React.useContext(SelectContext) ?? {
+      onValueChange: () => undefined,
+      value: { label: placeholder, value: "" },
+    };
+
+    return <Text>{context.value.label || placeholder}</Text>;
+  }
+
+  function MockItem({ label, value }: MockItemProps): React.JSX.Element {
+    const context: MockSelectContextValue = React.useContext(SelectContext) ?? {
+      onValueChange: () => undefined,
+      value: { label, value },
+    };
+
+    return (
+      <Pressable onPress={() => context.onValueChange({ label, value })}>
+        <Text>{label}</Text>
+      </Pressable>
+    );
+  }
+
+  function MockItemText(): null {
+    return null;
+  }
+
+  function MockPassthrough({ children }: MockChildrenProps): React.JSX.Element {
+    return <View>{children}</View>;
+  }
+
+  function MockLabel({ children }: MockChildrenProps): React.JSX.Element {
+    return <Text>{children}</Text>;
+  }
+
+  function MockIndicator({ children }: MockChildrenProps): React.JSX.Element {
+    return <>{children}</>;
+  }
+
+  return {
+    Content: MockPassthrough,
+    Group: MockPassthrough,
+    Item: MockItem,
+    ItemIndicator: MockIndicator,
+    ItemText: MockItemText,
+    Label: MockLabel,
+    Overlay: MockPassthrough,
+    Portal: MockPassthrough,
+    Root: MockRoot,
+    Trigger: MockTrigger,
+    Value: MockValue,
+  };
+});
 
 interface MockFlashListItem {
   id: string;
@@ -84,6 +201,7 @@ async function renderHistory(): Promise<Awaited<ReturnType<typeof render>>> {
   return render(
     <QueryClientProvider client={queryClient}>
       <HistoryScreen />
+      <PortalHost />
     </QueryClientProvider>,
   );
 }
@@ -126,7 +244,8 @@ describe("History screen", () => {
     mockedAppointmentsApi.list.mockRejectedValueOnce(
       new Error("Network error"),
     );
-    fireEvent.press(screen.getByText("Confirmada"));
+    fireEvent.press(screen.getByLabelText("Filtrar consultas por status"));
+    fireEvent.press(await screen.findByText("Confirmada"));
 
     expect(
       await screen.findByText("Não foi possível carregar suas consultas."),
@@ -140,7 +259,8 @@ describe("History screen", () => {
     const screen = await renderHistory();
 
     expect(await screen.findByText("Dra. Carla Mendes")).toBeTruthy();
-    fireEvent.press(screen.getByText("Confirmada"));
+    fireEvent.press(screen.getByLabelText("Filtrar consultas por status"));
+    fireEvent.press(await screen.findByText("Confirmada"));
 
     await waitFor(() => {
       expect(mockedAppointmentsApi.list).toHaveBeenLastCalledWith({

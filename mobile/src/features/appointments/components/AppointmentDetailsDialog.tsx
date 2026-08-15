@@ -31,41 +31,41 @@ export function AppointmentDetailsDialog({
     >
       <View className="gap-4">
         <View>
-          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+          <Text className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase">
             Profissional
           </Text>
-          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+          <Text className="mt-1 text-slate-950 dark:text-slate-50 text-base">
             {appointment.professional?.name ?? "Profissional não informado"}
           </Text>
         </View>
         <View>
-          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+          <Text className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase">
             Especialidade
           </Text>
-          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+          <Text className="mt-1 text-slate-950 dark:text-slate-50 text-base">
             {appointment.specialty?.name ?? "Especialidade não informada"}
           </Text>
         </View>
         <View>
-          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+          <Text className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase">
             Data e hora
           </Text>
-          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+          <Text className="mt-1 text-slate-950 dark:text-slate-50 text-base">
             {formatAppointmentDate(appointment.scheduled_at)}
           </Text>
         </View>
         <View>
-          <Text className="mb-1 text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+          <Text className="mb-1 font-medium text-slate-500 dark:text-slate-400 text-xs uppercase">
             Status
           </Text>
           <StatusBadge status={appointment.status} />
         </View>
         {appointment.observations ? (
           <View>
-            <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+            <Text className="font-medium text-slate-500 dark:text-slate-400 text-xs uppercase">
               Observações
             </Text>
-            <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+            <Text className="mt-1 text-slate-950 dark:text-slate-50 text-base">
               {appointment.observations}
             </Text>
           </View>
