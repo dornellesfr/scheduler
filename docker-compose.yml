@@ -7,6 +7,11 @@ services:
       - ./backend:/var/www/html
     ports:
       - "8000:8000"
+    command: >-
+      sh -c "export DB_CONNECTION=pgsql DB_HOST=database DB_PORT=5432
+      DB_DATABASE=scheduler DB_USERNAME=scheduler DB_PASSWORD=scheduler;
+      php artisan migrate --seed --force &&
+      php -S 0.0.0.0:8000 -t public public/index.php"
     environment:
       DB_CONNECTION: pgsql
       DB_HOST: database
