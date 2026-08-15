@@ -1,10 +1,13 @@
 import { format } from "date-fns";
+import { useEffect, useRef, useState } from "react";
 import {
+  Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   TextInput,
   View,
+  type KeyboardEvent,
 } from "react-native";
 
 import { Button } from "../../../components/ui/Button";
@@ -39,6 +42,31 @@ export function ScheduleReviewStep({
   time,
 }: ScheduleReviewStepProps): React.JSX.Element {
   const estimatedEnd: Date = getEstimatedEnd(date, time);
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+
+  useEffect(() => {
+    const keyboardShowSubscription = Keyboard.addListener(
+      "keyboardDidShow",
+      (event: KeyboardEvent): void => {
+        setKeyboardHeight(event.endCoordinates.height);
+      },
+    );
+    const keyboardHideSubscription = Keyboard.addListener(
+      "keyboardDidHide",
+      (): void => setKeyboardHeight(0),
+    );
+
+    return () => {
+      keyboardShowSubscription.remove();
+      keyboardHideSubscription.remove();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (keyboardHeight === 0) return;
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }, [keyboardHeight]);
 
   return (
     <KeyboardAvoidingView
@@ -46,10 +74,11 @@ export function ScheduleReviewStep({
       className="flex-1"
     >
       <ScrollView
+        ref={scrollViewRef}
         className="flex-1 bg-slate-50 dark:bg-slate-950"
         contentContainerStyle={{
           flexGrow: 1,
-          paddingBottom: 24,
+          paddingBottom: 24 + (Platform.OS === "android" ? keyboardHeight : 0),
           paddingHorizontal: 24,
           paddingTop: 24,
         }}
