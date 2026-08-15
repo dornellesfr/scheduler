@@ -1,31 +1,40 @@
 # Scheduler Mobile
 
-Expo Router mobile application using TypeScript, Uniwind and React Native Reusables conventions.
+Aplicativo React Native com Expo Router, TypeScript, Uniwind e React Query.
 
-## Prerequisites
+## Requisitos
 
-- Bun
-- Android Studio with an Android emulator
-- Backend available at `http://localhost:8000`
+- Bun.
+- Android Studio, Android SDK e um emulador Android para o alvo principal.
+- Backend disponível em `http://localhost:8000`.
 
-## Setup
+O setup completo do Docker, da API e da execução simultânea está no
+[README da raiz](../README.md).
+
+## Configuração
 
 ```sh
 bun install
 cp .env.example .env
 ```
 
-The default Android emulator API URL is `http://10.0.2.2:8000/api`. Override it with `EXPO_PUBLIC_API_URL` when needed.
+O emulador Android usa `http://10.0.2.2:8000/api` por padrão. Para um
+simulador iOS ou navegador, use `http://localhost:8000/api`. Para um dispositivo
+físico, use `http://IP_DO_COMPUTADOR:8000/api` e mantenha os dispositivos na
+mesma rede.
 
-## Run on Android
+## Executar no Android
+
+Com a API rodando em outro terminal:
 
 ```sh
 bun run android
 ```
 
-The project keeps Expo's iOS and web support available through `bun run ios` and `bun run web`.
+O suporte a iOS e web permanece disponível pela configuração do Expo, mas o
+Android é o alvo de validação desta entrega.
 
-## Quality checks
+## Qualidade
 
 ```sh
 bun run lint
@@ -33,8 +42,22 @@ bun run format:check
 bun test
 ```
 
-Formatting can be applied with `bun run format`.
+Para formatar os arquivos:
 
-After the native Expo splash, the app redirects to a two-tab home shell. The initial `Histórico` tab shows the empty state for consultations, and `Agendar` shows that appointment scheduling will be available soon. The shell has no API calls, fake data or business actions yet.
+```sh
+bun run format
+```
 
-Appointment flows, API services, authentication, Zustand stores and persistence remain pending for future deliveries. Android is the validation target for the shell; iOS and web support remain available.
+## Funcionalidades
+
+- Histórico real do paciente de demonstração via API.
+- Filtro por status, estados de carregamento, erro e lista vazia.
+- Detalhes da consulta em diálogo.
+- Cancelamento de consultas `scheduled` e `confirmed` com confirmação e
+  atualização da lista.
+- Fluxo de agendamento com seleção de especialidade, profissional, data,
+  horário, revisão e confirmação.
+
+O paciente de demonstração usa o ID
+`00000000-0000-4000-8000-000000000001`. Não há autenticação, cadastro ou dados
+fictícios de consultas.

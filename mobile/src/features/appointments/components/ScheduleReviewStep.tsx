@@ -1,0 +1,105 @@
+import { format } from "date-fns";
+import { TextInput, View } from "react-native";
+
+import { Button } from "../../../components/ui/Button";
+import { Text } from "../../../components/ui/Text";
+import type {
+  ScheduleProfessional,
+  ScheduleSpecialty,
+} from "../schemas/scheduleAppointment";
+import { formatScheduleDate, getEstimatedEnd } from "../utils/scheduleDate";
+
+interface ScheduleReviewStepProps {
+  date: Date;
+  isPending: boolean;
+  observations: string;
+  onBack: () => void;
+  onConfirm: () => void;
+  onObservationsChange: (observations: string) => void;
+  professional: ScheduleProfessional;
+  specialty: ScheduleSpecialty;
+  time: string;
+}
+
+export function ScheduleReviewStep({
+  date,
+  isPending,
+  observations,
+  onBack,
+  onConfirm,
+  onObservationsChange,
+  professional,
+  specialty,
+  time,
+}: ScheduleReviewStepProps): React.JSX.Element {
+  const estimatedEnd: Date = getEstimatedEnd(date, time);
+
+  return (
+    <View className="flex-1 bg-slate-50 px-6 pt-6 dark:bg-slate-950">
+      <View className="mb-5 flex-row items-center">
+        <Button
+          accessibilityLabel="Voltar"
+          className="mr-2 min-h-0 px-2 py-1"
+          variant="ghost"
+          onPress={onBack}
+        >
+          Voltar
+        </Button>
+        <Text className="flex-1 text-xl font-semibold text-slate-950 dark:text-slate-50">
+          Passo 3 de 3 · Revisão
+        </Text>
+      </View>
+      <View className="gap-4 rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+        <View>
+          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+            Especialidade
+          </Text>
+          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+            {specialty.name}
+          </Text>
+        </View>
+        <View>
+          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+            Profissional
+          </Text>
+          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+            {professional.name}
+          </Text>
+        </View>
+        <View>
+          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+            Data
+          </Text>
+          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+            {formatScheduleDate(date)}
+          </Text>
+        </View>
+        <View>
+          <Text className="text-xs font-medium uppercase text-slate-500 dark:text-slate-400">
+            Horário
+          </Text>
+          <Text className="mt-1 text-base text-slate-950 dark:text-slate-50">
+            {time} às {format(estimatedEnd, "HH:mm")}
+          </Text>
+        </View>
+      </View>
+      <Text className="mb-2 mt-5 text-sm font-medium text-slate-700 dark:text-slate-300">
+        Observações (opcional)
+      </Text>
+      <TextInput
+        accessibilityLabel="Observações (opcional)"
+        className="min-h-28 rounded-xl border border-slate-300 bg-white p-4 text-base text-slate-950 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-50"
+        multiline
+        numberOfLines={4}
+        placeholder="Adicione uma observação"
+        placeholderTextColor="#94a3b8"
+        textAlignVertical="top"
+        value={observations}
+        onChangeText={onObservationsChange}
+      />
+      <Button className="mt-5" loading={isPending} onPress={onConfirm}>
+        Confirmar agendamento
+      </Button>
+    </View>
+  );
+}

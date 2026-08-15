@@ -1,16 +1,98 @@
-import { History } from "lucide-react-native";
-import { Text, View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import { useState } from "react";
+import { View } from "react-native";
+
+import { Text } from "../../components/ui/Text";
+import { CancelAppointmentDialog } from "../../features/appointments/components/CancelAppointmentDialog";
+import { AppointmentCard } from "../../features/appointments/components/AppointmentCard";
+import { AppointmentDetailsDialog } from "../../features/appointments/components/AppointmentDetailsDialog";
+import { FilterChips } from "../../features/appointments/components/FilterChips";
+import { HistoryEmptyState } from "../../features/appointments/components/HistoryEmptyState";
+import { HistoryErrorState } from "../../features/appointments/components/HistoryErrorState";
+import { HistoryLoadingState } from "../../features/appointments/components/HistoryLoadingState";
+import { useAppointments } from "../../features/appointments/hooks/useAppointments";
+import { useCancelAppointment } from "../../features/appointments/hooks/useCancelAppointment";
+import type {
+  Appointment,
+  AppointmentStatus,
+} from "../../features/appointments/interfaces/Appointment";
 
 export default function HistoryScreen(): React.JSX.Element {
+  const [selectedStatus, setSelectedStatus] =
+    useState<AppointmentStatus | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState<boolean>(false);
+  const { data, isError, isPending, refetch } = useAppointments(selectedStatus);
+  const cancelAppointment = useCancelAppointment();
+
+  function handleDetailsOpenChange(open: boolean): void {
+    if (open) return;
+
+    setIsCancelDialogOpen(false);
+    setSelectedAppointment(null);
+  }
+
+  function handleRequestCancellation(): void {
+    cancelAppointment.reset();
+    setIsCancelDialogOpen(true);
+  }
+
+  function handleConfirmCancellation(): void {
+    if (!selectedAppointment) return;
+
+    cancelAppointment.mutate(selectedAppointment.id, {
+      onSuccess: (appointment: Appointment) => {
+        setSelectedAppointment(appointment);
+        setIsCancelDialogOpen(false);
+      },
+    });
+  }
+
+  const hasData: boolean = data !== undefined;
+
   return (
-    <View className="flex-1 items-center justify-center bg-slate-50 px-6 dark:bg-slate-950">
-      <History color="#2563eb" size={48} strokeWidth={1.75} />
-      <Text className="mt-6 text-center text-2xl font-semibold text-slate-950 dark:text-slate-50">
+    <View className="flex-1 bg-slate-50 px-6 pt-6 dark:bg-slate-950">
+      <Text className="mb-5 text-2xl font-semibold text-slate-950 dark:text-slate-50">
         Histórico de consultas
       </Text>
-      <Text className="mt-3 text-center text-base text-slate-600 dark:text-slate-400">
-        Nenhuma consulta encontrada.
-      </Text>
+      <FilterChips
+        selectedStatus={selectedStatus}
+        onSelect={setSelectedStatus}
+      />
+      {isPending && !hasData ? <HistoryLoadingState /> : null}
+      {isError && !hasData ? (
+        <HistoryErrorState onRetry={() => refetch()} />
+      ) : null}
+      {hasData && !isError ? (
+        <FlashList
+          contentContainerStyle={{ paddingBottom: 24 }}
+          data={data}
+          keyExtractor={(item: Appointment) => item.id}
+          ListEmptyComponent={<HistoryEmptyState />}
+          renderItem={({ item }: { item: Appointment }) => (
+            <AppointmentCard
+              appointment={item}
+              onPress={setSelectedAppointment}
+            />
+          )}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : null}
+      <AppointmentDetailsDialog
+        appointment={selectedAppointment}
+        open={selectedAppointment !== null}
+        onCancel={handleRequestCancellation}
+        onOpenChange={handleDetailsOpenChange}
+      />
+      <CancelAppointmentDialog
+        appointment={selectedAppointment}
+        error={cancelAppointment.isError}
+        isPending={cancelAppointment.isPending}
+        open={isCancelDialogOpen}
+        onConfirm={handleConfirmCancellation}
+        onOpenChange={setIsCancelDialogOpen}
+      />
     </View>
   );
 }
