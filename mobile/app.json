@@ -3,6 +3,12 @@
     "scheme": "scheduler",
     "userInterfaceStyle": "automatic",
     "orientation": "default",
+    "splash": {
+      "backgroundColor": "#f8fafc",
+      "dark": {
+        "backgroundColor": "#020617"
+      }
+    },
     "web": {
       "output": "static"
     },

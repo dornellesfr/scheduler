@@ -35,4 +35,6 @@ bun test
 
 Formatting can be applied with `bun run format`.
 
-The initial screen is intentionally minimal and only verifies that the Scheduler application starts. Appointment flows, API services, authentication, Zustand stores and persistence are not part of this setup.
+After the native Expo splash, the app redirects to a two-tab home shell. The initial `Histórico` tab shows the empty state for consultations, and `Agendar` shows that appointment scheduling will be available soon. The shell has no API calls, fake data or business actions yet.
+
+Appointment flows, API services, authentication, Zustand stores and persistence remain pending for future deliveries. Android is the validation target for the shell; iOS and web support remain available.

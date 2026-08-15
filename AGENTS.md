@@ -76,6 +76,14 @@ The project requirements are defined by `specs/260803-teste-dev-mobile.pdf`. Whe
 Current infrastructure direction:
 
 - `backend/`: Laravel-compatible PHP 8.2+ API.
-- `mobile/`: React Native with Expo using JavaScript.
+- `mobile/`: React Native with Expo using TypeScript.
 - Node-compatible tooling: Bun.
 - Docker database: PostgreSQL provisionally, until the application stack is defined further.
+
+## Mobile Development
+
+- Treat `specs/260803-teste-dev-mobile.pdf` and the applicable PRD under `specs/prds-mobile/` as the product source of truth.
+- Any work under `/mobile` must load and follow the repository skills `react-native-architecture-auditor`, `react-native-code-style` and `react-native-typescript-guardrails`.
+- Keep new mobile route files under `mobile/src/app/` and follow the architecture skill for non-route files under `mobile/src/`.
+- Use the existing Expo Router and QueryClientProvider infrastructure unless the applicable PRD explicitly changes it.
+- The mobile visual baseline uses automatic light/dark themes, neutral backgrounds and surfaces, readable neutral text, blue for primary actions and selected navigation, spacing in multiples of four, and discreet borders and rounding.
