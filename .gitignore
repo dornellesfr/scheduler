@@ -20,7 +20,6 @@ storage/logs/
 # Local environment files
 .env
 .env.*
-!.env.example
 
 # Python
 __pycache__/
